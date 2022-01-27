@@ -9,14 +9,12 @@ if not exist "%solutionfolder%" (goto error)
 if not exist "%solutionfolder%%projectsubfolder%" (goto error)
 cd /d %solutionfolder%
 
-rem Delete Builds folder
-del /f /q /s Builds\%dotnetcore%\*.* > nul
-rmdir /q /s Builds\%dotnetcore%
+rem Delete previous Builds folder
+if exist "Builds\%dotnetcore%\" rmdir /q /s Builds\%dotnetcore%
 mkdir Builds\%dotnetcore%
 
-rem Delete bin folder of project
-del /f /q /s "%projectsubfolder%bin\*.*" > nul
-rmdir /q /s "%projectsubfolder%bin"
+rem Delete previous bin folder of project (will get auto created when building)
+if exist "%projectsubfolder%bin\" rmdir /q /s "%projectsubfolder%bin"
 
 rem Public .NET Core versions
 dotnet publish %projectsubfolder%%project%.csproj /p:PublishProfile=%projectsubfolder%Properties\PublishProfiles\linux-arm-%dotnetcore%.pubxml --configuration Release
@@ -25,11 +23,8 @@ dotnet publish %projectsubfolder%%project%.csproj /p:PublishProfile=%projectsubf
 dotnet publish %projectsubfolder%%project%.csproj /p:PublishProfile=%projectsubfolder%Properties\PublishProfiles\win-x64-%dotnetcore%.pubxml --configuration Release
 dotnet publish %projectsubfolder%%project%.csproj /p:PublishProfile=%projectsubfolder%Properties\PublishProfiles\win-x86-%dotnetcore%.pubxml --configuration Release
 
-rem Delete settings.json from all build if exist
-rem First check if building above worked
+rem Check if building above worked
 if not exist "%projectsubfolder%bin\Release\%dotnetcore%\publish\" (goto error)
-cd %projectsubfolder%bin\Release\%dotnetcore%\publish\
-rem del /s /q settings.json
 
 rem Rar all project builds
 cd /d "%solutionfolder%"
