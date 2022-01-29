@@ -1,9 +1,12 @@
-﻿using ScanMarkdownFiles;
+﻿// Todo:
+// - add tests
+
+using ScanMarkdownFiles;
 
 Arguments arguments;
 
 //use command line for arguments
-arguments = ParseArguments(args);
+arguments = ArgumentsParser.Parse(args);
 
 //test arguments
 //arguments = new Arguments()
@@ -17,34 +20,23 @@ List<string> fileNames = Directory
 .GetFiles(arguments.RootFolder, arguments.FilePattern, (arguments.OnlyToplevel ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories))
 .ToList();
 
-Console.WriteLine($"Found {fileNames.Count()} files matching {arguments.FilePattern} in {arguments.RootFolder}");
+Console.WriteLine($"Found {fileNames.Count} files matching '{arguments.FilePattern}' in '{arguments.RootFolder}':\n");
 
 List<MarkDownFile> markDownFiles = new List<MarkDownFile>();
 foreach (var filename in fileNames)
 {
-    List<string> lines = File.ReadAllLines(filename).ToList();
+    string contents = File.ReadAllText(filename);
+    
+    List<CodeBlock> codeBlocks = MarkDownExtractor.ExtractCodeBlocks(contents);
 
-    int count = lines.Count(line => line.Contains("```"));
-    List<string> codeSnippets = lines
-        .Select(line => line.Trim())
-        .Where(line => line.StartsWith("```"))
-        .ToList();
-
-    MarkDownFile markDownFile = new MarkDownFile(filename.Remove(0, arguments.RootFolder.Length), codeSnippets);
-    Console.WriteLine(markDownFile);
-
-    if (markDownFile.CodeSnippetsCount * 2 != count)
-    {
-        throw new Exception("One or more lines having ``` which are NOT at the beginning of the line!");
-    }
-
-    markDownFile.Validate();
-
+    MarkDownFile markDownFile = new MarkDownFile(filename.Remove(0, arguments.RootFolder.Length) , codeBlocks);
     markDownFiles.Add(markDownFile);
+
+    Console.WriteLine(markDownFile);
 }
 
-var stats = markDownFiles
-    .SelectMany(markDownFile => markDownFile.CountPerCodeSnippet)
+var statsMultiLineCodeBlocks = markDownFiles
+    .SelectMany(markDownFile => markDownFile.CountPerMultiLineCodeBlockType)
     .GroupBy(countPerCodeSnippet => countPerCodeSnippet.Key)
     .Select(codeSnippet => new
     {
@@ -54,37 +46,17 @@ var stats = markDownFiles
     })
     .ToList();
 
+var totalSingleLineCodeBlocks = markDownFiles.Sum(markDownFile => markDownFile.SingleLineCodeBlocksCount);
+var totalMultiLineCodeBlocks = markDownFiles.Sum(markDownFile => markDownFile.MultiLineCodeBlocksCount);
+
+var totalFilesWithSingleLineCodeBlocks = markDownFiles.Count(markDownFile => markDownFile.SingleLineCodeBlocks.Count() > 0);
+var totalFilesWithMultiLineCodeBlocks = markDownFiles.Count(markDownFile => markDownFile.MultiLineCodeBlocks.Count() > 0);
+
 Console.WriteLine("\nOverall stats:");
-Console.WriteLine($" Unique codesnippet types found: {stats.Count}");
-string statsAsString = " " + String.Join("\n  ", stats
-    .Select(stat => $"{stat.TotalCount,4}x found in {stat.NumFilesOccurences,3} file(s): {stat.CodeSnippetType}"));
+Console.WriteLine($"  {totalSingleLineCodeBlocks,4} single code block type{(totalSingleLineCodeBlocks > 1 ? "s" : "")} found in {totalFilesWithSingleLineCodeBlocks} file{(totalFilesWithSingleLineCodeBlocks > 1 ? "s" : "")}");
+Console.WriteLine($"  {totalMultiLineCodeBlocks,4} multi-line code block type{(totalMultiLineCodeBlocks > 1 ? "s" : "")} found in {totalFilesWithMultiLineCodeBlocks} file{(totalFilesWithMultiLineCodeBlocks > 1 ? "s" : "")}:");
+Console.WriteLine($"    {statsMultiLineCodeBlocks.Count,4} unique (multi-line) code block type{(statsMultiLineCodeBlocks.Count > 1 ? "s" : "")} found:");
+string statsAsString = String.Join("\n      ", statsMultiLineCodeBlocks
+    .Select(stat => $"{stat.TotalCount,4}x found in {stat.NumFilesOccurences,3} file(s): {(stat.CodeSnippetType != "" ? stat.CodeSnippetType : "<no type>")}"));
 
-Console.WriteLine($" {statsAsString}");
-
-Arguments ParseArguments(string[] args)
-{
-    if (args.Length == 0)
-    {
-        Console.WriteLine("Error in arguments!");
-        Console.WriteLine("Syntax: <program> <rootFolderToScan> [filePattern = *.md] [-onlyTopLevel = no]");
-        Console.WriteLine("  For example:");
-        Console.WriteLine("    ScanMarkDownFiles /sources/myrepo");
-        Console.WriteLine("      will scan all /sources/myrepo including subdirs for *.md files");
-        Console.WriteLine("");
-        Console.WriteLine("    ScanMarkDownFiles /sources/myrepo *.mdwn");
-        Console.WriteLine("      will scan all /sources/myrepo including subdirs for *.mdwn files");
-        Console.WriteLine("");
-        Console.WriteLine("    ScanMarkDownFiles /sources/myrepo *.md -onlyTopLevel");
-        Console.WriteLine("      will only scan the top level directory /sources/myrepo for *.md files");
-        Environment.Exit(1);
-    }
-
-    Arguments arguments = new Arguments();
-
-    arguments.RootFolder = args[0];
-
-    if (args.Length >= 2) arguments.FilePattern = args[1];
-    if (args.Length == 3) arguments.OnlyToplevel = (args[2].ToLower().Trim() == "-onlytoplevel");
-
-     return arguments;
-}
+Console.WriteLine($"      {statsAsString}");

@@ -8,7 +8,7 @@ namespace ScanMarkdownFiles
 {
     public class Arguments
     {
-        public string RootFolder { get; set; }
+        public string RootFolder { get; set; } = "";
         public string FilePattern { get; set; } = "*.md";
         public bool OnlyToplevel { get; set; } = false;
     }
