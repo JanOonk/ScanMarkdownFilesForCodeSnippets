@@ -11,5 +11,7 @@ namespace ScanMarkdownFiles
         public string RootFolder { get; set; } = "";
         public string FilePattern { get; set; } = "*.md";
         public bool OnlyToplevel { get; set; } = false;
+        public bool HideMultiLineCodeBlocks { get; set; } = false;
+        public bool HideSingleLineCodeBlocks { get; set; } = false;
     }
 }

@@ -55,7 +55,7 @@ namespace ScanMarkdownFiles
             }
         }
 
-        public override string ToString()
+        public string ToString(bool hideSingleLineCodeBlocks, bool hideMultiLineCodeBlocks)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -64,28 +64,31 @@ namespace ScanMarkdownFiles
             if (SingleLineCodeBlocksCount > 0)
             {
                 sb.Append($"\n  {SingleLineCodeBlocksCount} single-line code block(s) found\n");
+
                 for (int i = 0; i < SingleLineCodeBlocks.Count; i++)
                 {
                     CodeBlock codeBlock = SingleLineCodeBlocks[i];
-                    sb.Append($"{codeBlock.ToString().IndentWithLevel(2)}");
+                    sb.Append($"{codeBlock.ToString(hideSingleLineCodeBlocks, hideMultiLineCodeBlocks).IndentWithLevel(2)}");
 
                     if (i < SingleLineCodeBlocks.Count - 1) sb.Append("\n");
                 }
             }
 
-            if (MultiLineCodeBlocksCount > 0) { 
+            if (MultiLineCodeBlocksCount > 0)
+            {
                 sb.Append($"\n{"".IndentWithLevel(1)}{MultiLineCodeBlocksCount} multi-line code block(s) found:\n");
+
                 for (int i = 0; i < MultiLineCodeBlocks.Count; i++)
                 {
                     CodeBlock codeBlock = MultiLineCodeBlocks[i];
-                    sb.Append($"{codeBlock.ToString().IndentWithLevel(2)}");
+                    sb.Append($"{codeBlock.ToString(hideSingleLineCodeBlocks, hideMultiLineCodeBlocks).IndentWithLevel(2)}");
 
                     if (i < MultiLineCodeBlocks.Count - 1) sb.Append("\n");
                 }
 
                 sb.Append($"\n{"".IndentWithLevel(1)}{UniqueMultiLineCodeBlockTypes} unique multi-line code block type(s) found:");
-
                 sb.Append($"\n{"".IndentWithLevel(2)}Number of occurences per type:");
+
                 foreach (var countPerMultiLineCodeBlockType in CountPerMultiLineCodeBlockType)
                 {
                     string key = countPerMultiLineCodeBlockType.Key;
@@ -96,6 +99,11 @@ namespace ScanMarkdownFiles
             }
 
             return sb.ToString();
+        }
+
+        public override string ToString()
+        {
+            return ToString(true, true);
         }
     }
 }

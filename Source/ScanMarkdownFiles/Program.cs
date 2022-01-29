@@ -26,13 +26,13 @@ List<MarkDownFile> markDownFiles = new List<MarkDownFile>();
 foreach (var filename in fileNames)
 {
     string contents = File.ReadAllText(filename);
-    
+
     List<CodeBlock> codeBlocks = MarkDownExtractor.ExtractCodeBlocks(contents);
 
-    MarkDownFile markDownFile = new MarkDownFile(filename.Remove(0, arguments.RootFolder.Length) , codeBlocks);
+    MarkDownFile markDownFile = new MarkDownFile(filename.Remove(0, arguments.RootFolder.Length), codeBlocks);
     markDownFiles.Add(markDownFile);
 
-    Console.WriteLine(markDownFile);
+    Console.WriteLine(markDownFile.ToString(arguments.HideSingleLineCodeBlocks, arguments.HideMultiLineCodeBlocks));
 }
 
 var statsMultiLineCodeBlocks = markDownFiles

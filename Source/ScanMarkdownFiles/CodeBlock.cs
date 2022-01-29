@@ -37,23 +37,36 @@ namespace ScanMarkdownFiles
             }
         }
 
-        public override string ToString()
+        public string ToString(bool hideSingleLineCodeBlocks, bool hideMultiLineCodeBlocks)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             if (!MultiLine)
             {
-                stringBuilder.Append($"Single line code block on line {StartLineNr} with contents: {Contents}");
+                stringBuilder.Append($"Single line code block on line {StartLineNr}");
+
+                if (!hideSingleLineCodeBlocks)
+                {
+                    stringBuilder.Append($"  with contents: {Contents}");
+                }
             }
             else
             {
-                stringBuilder.Append($"Multiline code block on lines {StartLineNr}-{EndLineNr} with type '{(Type == "" ? "<no type>" : Type)}'\n");
+                stringBuilder.Append($"Multiline code block on lines {StartLineNr}-{EndLineNr} with type '{(Type == "" ? "<no type>" : Type)}'");
 
-                stringBuilder.Append($"{"".IndentWithLevel(1)}Contents ({ContentLines.Count} line{(ContentLines.Count > 1 ? "s" : "")}):\n");
-                stringBuilder.Append($"{ContentLines.MakeIndentedStringWithLevel(2)}");
+                if (!hideMultiLineCodeBlocks)
+                {
+                    stringBuilder.Append($"\n{"".IndentWithLevel(1)}Contents ({ContentLines.Count} line{(ContentLines.Count > 1 ? "s" : "")}):\n");
+                    stringBuilder.Append($"{ContentLines.MakeIndentedStringWithLevel(2)}");
+                }
             }
 
             return stringBuilder.ToString();
+        }
+
+        public override string ToString()
+        {
+            return ToString(true, true);
         }
     }
 }

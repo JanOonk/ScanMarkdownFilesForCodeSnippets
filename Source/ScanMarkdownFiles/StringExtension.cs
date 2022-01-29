@@ -13,6 +13,12 @@ namespace ScanMarkdownFiles
             return prefix + line;
         }
 
+        public static bool Like(this string s1, string s2)
+        {
+            //case insensitive compare
+            return s1.ToLower().CompareTo(s2.ToLower()) == 0;
+        }
+
         public static string IndentWithLevel(this string line, int level)
         {
             //a string could contain multiple lines so Split it to be sure

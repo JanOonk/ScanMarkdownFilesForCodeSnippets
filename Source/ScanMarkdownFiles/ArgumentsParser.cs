@@ -8,14 +8,18 @@ namespace ScanMarkdownFiles
 {
     public static class ArgumentsParser
     {
+
         public static Arguments Parse(string[] args)
         {
             if (args.Length == 0)
             {
                 Console.WriteLine("Error in arguments!");
-                Console.WriteLine("Syntax: <program> <rootFolderToScan> [filePattern = *.md] [-onlyTopLevel = no]");
+                Console.WriteLine("Syntax: <program> <rootFolderToScan> [filePattern = *.md] [-onlyTopLevel = no] [-hideMultiLineCodeBlocks = no] [-hideSingleLineCodeBlocks = no]");
                 Console.WriteLine("  For example:");
                 Console.WriteLine("    ScanMarkDownFiles /sources/myrepo");
+                Console.WriteLine("      will scan all /sources/myrepo including subdirs for *.md files and show the contents of both single and multi-line code blocks");
+                Console.WriteLine("");
+                Console.WriteLine("    ScanMarkDownFiles /sources/myrepo -hideMultiLineCodeBlocks -hideSingleLineCodeBlocks");
                 Console.WriteLine("      will scan all /sources/myrepo including subdirs for *.md files");
                 Console.WriteLine("");
                 Console.WriteLine("    ScanMarkDownFiles /sources/myrepo *.mdwn");
@@ -28,10 +32,23 @@ namespace ScanMarkdownFiles
 
             Arguments arguments = new Arguments();
 
-            arguments.RootFolder = args[0];
+            string rootFolder = args[0];
+
+            if (!Directory.Exists(rootFolder))
+            {
+                Console.WriteLine($"Folder '{rootFolder}' does NOT exist!");
+                Environment.Exit(1);
+            }
+            else arguments.RootFolder = rootFolder;
 
             if (args.Length >= 2) arguments.FilePattern = args[1];
-            if (args.Length == 3) arguments.OnlyToplevel = (args[2].ToLower().Trim() == "-onlytoplevel");
+
+            for (int i = 2; i < args.Length; i++)
+            {
+                arguments.OnlyToplevel = arguments.OnlyToplevel || args[i].Like("-onlyTopLevel");
+                arguments.HideMultiLineCodeBlocks = arguments.HideMultiLineCodeBlocks || args[i].Like("-hideMultiLineCodeBlocks");
+                arguments.HideSingleLineCodeBlocks = arguments.HideSingleLineCodeBlocks || args[i].Like("-hideSingleLineCodeBlocks");
+            }
 
             return arguments;
         }
