@@ -1,6 +1,9 @@
-# ScanMarkdownFilesForCodeSnippets
-Scans Markdown files and shows stats about codesnippet usage
+# Scan Markdown Files For CodeBlocks
+Scans Markdown files for (single/multi-line) codeblocks and shows stats about codeblocks usage and what syntax (json, console, sh, javascript, md, ...) was used.
 
+For syntax on how to make (fenced) codeblocks and use syntax highlighting see https://www.markdownguide.org/extended-syntax/#fenced-code-blocks and https://www.markdownguide.org/extended-syntax/#syntax-highlighting
+
+## How to use
 ```console
 Syntax: <program> <rootFolderToScan> [filePattern = *.md] [-onlyTopLevel = no] [-hideMultiLineCodeBlocks = no] [-hideSingleLineCodeBlocks = no]
   For example:
