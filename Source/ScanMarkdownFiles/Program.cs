@@ -1,5 +1,6 @@
 ﻿// Todo:
 // - add tests
+// - make code block seperator configurable
 
 using ScanMarkdownFiles;
 

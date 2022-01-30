@@ -14,6 +14,7 @@ namespace ScanMarkdownFiles
             if (args.Length == 0)
             {
                 Console.WriteLine("Error in arguments!");
+                Console.WriteLine("");
                 Console.WriteLine("Syntax: <program> <rootFolderToScan> [filePattern = *.md] [-onlyTopLevel = no] [-hideMultiLineCodeBlocks = no] [-hideSingleLineCodeBlocks = no]");
                 Console.WriteLine("  For example:");
                 Console.WriteLine("    ScanMarkDownFiles /sources/myrepo");

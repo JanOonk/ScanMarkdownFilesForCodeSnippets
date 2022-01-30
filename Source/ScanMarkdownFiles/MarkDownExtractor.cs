@@ -11,21 +11,28 @@ namespace ScanMarkdownFiles
     {
         public static List<CodeBlock> ExtractCodeBlocks(string contents)
         {
-            string regEx = "```(.*?)```"; //captures both single and multiline code blocks
-
-            MatchCollection linkMatches;
-            linkMatches = Regex.Matches(contents, regEx, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-
             List<CodeBlock> codeBlocks = new List<CodeBlock>();
 
-            for (int i = 0; i < linkMatches.Count; i++)
-            {
-                Match match = linkMatches[i];
-                List<string> codeBlocksLines = match.Groups[1].Value.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).ToList();
+            string[] codeBlockSyntaxes = new string[] { "```", "~~~" };
 
-                int lineNr = LineNrFromIndex(contents, match.Index);
-                CodeBlock codeBlock = new CodeBlock(codeBlocksLines, lineNr);
-                codeBlocks.Add(codeBlock);
+            foreach (string codeBlockSyntax in codeBlockSyntaxes)
+            {
+                string regEx = @$"^(?:\s*?)(?:{codeBlockSyntax})(.*?)(?:{codeBlockSyntax})(?:\s*)$"; //captures both single and multiline code blocks
+
+                MatchCollection linkMatches;
+                linkMatches = Regex.Matches(contents, regEx, RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline);
+
+                for (int i = 0; i < linkMatches.Count; i++)
+                {
+                    Match match = linkMatches[i];
+                    string matchValue = match.Groups[1].Value;
+
+                    List<string> codeBlockLines = matchValue.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).ToList();
+
+                    int startLineNr = LineNrFromIndex(contents, match.Index);
+                    CodeBlock codeBlock = new CodeBlock(codeBlockLines, startLineNr);
+                    codeBlocks.Add(codeBlock);
+                }
             }
 
             return codeBlocks;
