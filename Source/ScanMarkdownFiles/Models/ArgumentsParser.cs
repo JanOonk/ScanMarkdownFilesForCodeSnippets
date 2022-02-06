@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ScanMarkdownFiles.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ScanMarkdownFiles
+namespace ScanMarkdownFiles.Models
 {
     public static class ArgumentsParser
     {
@@ -15,12 +16,13 @@ namespace ScanMarkdownFiles
             {
                 Console.WriteLine("Error in arguments!");
                 Console.WriteLine("");
-                Console.WriteLine("Syntax: <program> <rootFolderToScan> [filePattern = *.md] [-onlyTopLevel = no] [-hideMultiLineCodeBlocks = no] [-hideSingleLineCodeBlocks = no]");
+                Console.WriteLine("ScanMarkdownFiles v1.3 - 06 Feb 2022");
+                Console.WriteLine("Syntax: <program> <rootFolderToScan> [filePattern = *.md] [-onlyTopLevel = no] [-hideFencedCodeBlocks = no] [-hideInlineCodeBlocks = no]");
                 Console.WriteLine("  For example:");
                 Console.WriteLine("    ScanMarkDownFiles /sources/myrepo");
-                Console.WriteLine("      will scan all /sources/myrepo including subdirs for *.md files and show the contents of both single and multi-line code blocks");
+                Console.WriteLine("      will scan all /sources/myrepo including subdirs for *.md files and show the contents of both inline and fenced code blocks");
                 Console.WriteLine("");
-                Console.WriteLine("    ScanMarkDownFiles /sources/myrepo -hideMultiLineCodeBlocks -hideSingleLineCodeBlocks");
+                Console.WriteLine("    ScanMarkDownFiles /sources/myrepo -hideFencedCodeBlocks -hideInlineCodeBlocks");
                 Console.WriteLine("      will scan all /sources/myrepo including subdirs for *.md files");
                 Console.WriteLine("");
                 Console.WriteLine("    ScanMarkDownFiles /sources/myrepo *.mdwn");
@@ -47,8 +49,8 @@ namespace ScanMarkdownFiles
             for (int i = 2; i < args.Length; i++)
             {
                 arguments.OnlyToplevel = arguments.OnlyToplevel || args[i].Like("-onlyTopLevel");
-                arguments.HideMultiLineCodeBlocks = arguments.HideMultiLineCodeBlocks || args[i].Like("-hideMultiLineCodeBlocks");
-                arguments.HideSingleLineCodeBlocks = arguments.HideSingleLineCodeBlocks || args[i].Like("-hideSingleLineCodeBlocks");
+                arguments.HideFencedCodeBlocks = arguments.HideFencedCodeBlocks || args[i].Like("-hideFencedCodeBlocks");
+                arguments.HideInlineCodeBlocks = arguments.HideInlineCodeBlocks || args[i].Like("-hideInlineCodeBlocks");
             }
 
             return arguments;
