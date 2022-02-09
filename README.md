@@ -223,6 +223,7 @@ Replacing codeblock types:
        1x in \integration-services-master\documentation\docs\getting_started\installation\kubernetes\local_setup.md
     Total replacements: 133x
   Overall total replacements: 135x
-
+  Total files changed: 47x
+  
 Finished in 00:00:00.6264852
 ```
