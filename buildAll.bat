@@ -1,4 +1,4 @@
-set version=1.3
+set version=1.4
 set dotnetcore=net6.0
 set solutionfolder=C:\Users\JanOonk\source\repos\ScanMarkdownFilesForCodeSnippets\
 set projectsubfolder=Source\ScanMarkdownFiles\
