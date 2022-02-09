@@ -1,30 +1,38 @@
 # Scan Markdown Files For CodeBlocks
-Scans Markdown files for inline and fenced codeblocks and shows stats about codeblocks usage and what syntax (json, console, sh, javascript, md, ...) was used.
+Scans Markdown files for inline and fenced codeblocks, ability to search/replace codeblock type, and shows stats about codeblocks usage and what syntax (json, console, sh, javascript, md, ...) was used.
 It's extremely fast and uses the CommonMark markdown compliant MarkDig library.
 
 For syntax on how to make (fenced) codeblocks and use syntax highlighting see https://www.markdownguide.org/extended-syntax/#fenced-code-blocks and https://www.markdownguide.org/extended-syntax/#syntax-highlighting
 
 ## How to use
+
+Just run the executable and it will show all the options and help:
 ```console
-ScanMarkdownFiles v1.3 - 06 Feb 2022
-Syntax: <program> <rootFolderToScan> [filePattern = *.md] [-onlyTopLevel = no] [-hideFencedCodeBlocks = no] [-hideInlineCodeBlocks = no]
-  For example:
-    ScanMarkDownFiles /sources/myrepo
-      will scan all /sources/myrepo including subdirs for *.md files and show the contents of both inline and fenced code blocks
+Copyright (C) 2022 ScanMarkdownFiles
 
-    ScanMarkDownFiles /sources/myrepo -hideFencedCodeBlocks -hideInlineCodeBlocks
-      will scan all /sources/myrepo including subdirs for *.md files
+  --rootfolder              Required. Rootfolder to scan
 
-    ScanMarkDownFiles /sources/myrepo *.mdwn
-      will scan all /sources/myrepo including subdirs for *.mdwn files
+  --filepattern             (Default: *.md) Files to scan
 
-    ScanMarkDownFiles /sources/myrepo *.md -onlyTopLevel
-      will only scan the top level directory /sources/myrepo for *.md files
+  --includesubfolders       (Default: true) Scan also subfolders of rootfolder
+
+  --showinlinecodeblocks    (Default: true) Show inline code blocks in output
+
+  --showfencedcodeblocks    (Default: true) Show fenced code blocks in output
+
+  -r, --replacetype         Replace one or more codeblock type with another type for example:
+                            replace 'bash' and 'sh' with 'shell': -r bash=shell sh=shell
+
+  --help                    Display this help screen.
+
+  --version                 Display version information.
 ```
 
-Example output:
+Example output for `ScanMarkdownFiles.exe --rootfolder c:\temp\iota-repos`:
 ```console
 Found 852 files matching '*.md' in 'c:\temp\iota-repos':
+
+[...]
 
 \integration-services-master\CHANGELOG.md
 \integration-services-master\MIGRATION.md
@@ -45,7 +53,12 @@ Found 852 files matching '*.md' in 'c:\temp\iota-repos':
         cmake -G Ninja -DCMAKE_C_COMPILER=clang-11 -DCMAKE_CXX_COMPILER=clang++-11 -DIOTA_WALLET_ENABLE:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=$PWD ..
         ninja && ninja test
 
-[ ... ]
+[...]
+
+\wasp-master\packages\vm\wasmlib\ts\wasmclient\buffer\readme.md
+\wasp-master\contracts\wasm\fairroulette\frontend\src\lib\fairroulette_client\readme.md
+\wasp-master\contracts\wasm\fairroulette\frontend\src\lib\wasp_client\readme.md
+\wasp-master\contracts\wasm\fairroulette\frontend\src\lib\wasp_client\buffer\readme.md
 
 Overall stats:
     10 inline code block types found in 6 files
@@ -53,6 +66,7 @@ Overall stats:
       28 unique fenced code block types found:
        405x found in  92 file(s): <no type>
        133x found in  47 file(s): bash
+         3x found in   1 file(s): bash=
         10x found in   2 file(s): c
         68x found in  14 file(s): console
          2x found in   1 file(s): csv
@@ -60,6 +74,7 @@ Overall stats:
        155x found in  45 file(s): go
          8x found in   2 file(s): java
         22x found in   9 file(s): javascript
+         1x found in   1 file(s): javascript=
         60x found in  21 file(s): js
        149x found in  43 file(s): json
         21x found in   9 file(s): log
@@ -77,4 +92,6 @@ Overall stats:
          3x found in   2 file(s): vbnet
         31x found in  24 file(s): yaml
          2x found in   1 file(s): yml
+
+Finished in 00:00:06.1708832
 ```
