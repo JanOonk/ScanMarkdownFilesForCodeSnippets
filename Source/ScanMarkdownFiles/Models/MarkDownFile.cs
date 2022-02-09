@@ -63,7 +63,7 @@ namespace ScanMarkdownFiles.Models
             }
         }
 
-        public string ToString(bool hideContentsOfInlineCodeBlocks, bool hideContentsOfFencedCodeBlocks)
+        public string ToString(bool showContentsOfInlineCodeBlocks, bool showContentsOfFencedCodeBlocks)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -76,7 +76,7 @@ namespace ScanMarkdownFiles.Models
                 for (int i = 0; i < InlineCodeBlocks.Count; i++)
                 {
                     InlineCodeBlock inlineCodeBlock = InlineCodeBlocks[i];
-                    sb.Append($"{inlineCodeBlock.ToString(hideContentsOfInlineCodeBlocks, hideContentsOfFencedCodeBlocks).IndentWithLevel(2)}");
+                    sb.Append($"{inlineCodeBlock.ToString(showContentsOfInlineCodeBlocks, showContentsOfFencedCodeBlocks).IndentWithLevel(2)}");
 
                     if (i < InlineCodeBlocks.Count - 1) sb.Append('\n');
                 }
@@ -89,7 +89,7 @@ namespace ScanMarkdownFiles.Models
                 for (int i = 0; i < FencedCodeBlocks.Count; i++)
                 {
                     FencedCodeBlock fencedCodeBlock = FencedCodeBlocks[i];
-                    sb.Append($"{fencedCodeBlock.ToString(hideContentsOfInlineCodeBlocks, hideContentsOfFencedCodeBlocks).IndentWithLevel(2)}");
+                    sb.Append($"{fencedCodeBlock.ToString(showContentsOfInlineCodeBlocks, showContentsOfFencedCodeBlocks).IndentWithLevel(2)}");
 
                     if (i < FencedCodeBlocks.Count - 1) sb.Append('\n');
                 }

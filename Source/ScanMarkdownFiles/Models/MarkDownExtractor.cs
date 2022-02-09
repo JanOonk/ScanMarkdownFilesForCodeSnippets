@@ -39,7 +39,7 @@ namespace ScanMarkdownFiles.Models
                         {
                             if (delimiters.Contains(codeInline.Delimiter.ToString()) && codeInline.DelimiterCount == 3)
                             {
-                                InlineCodeBlock inlineCodeBlock = new InlineCodeBlock(codeInline.Content, codeInline.Line + 1);
+                                InlineCodeBlock inlineCodeBlock = new InlineCodeBlock(codeInline.Content, codeInline.Line + 1, codeInline.Column + 1);
                                 Debug.WriteLine(inlineCodeBlock.ToString(false, false));
                                 codeBlocks.Add(inlineCodeBlock);
                                 //Debug.WriteLine($"Inline code block found on line {codeInline.Line} at column {codeInline.Column}:\n {codeInline.Content}");
@@ -56,7 +56,7 @@ namespace ScanMarkdownFiles.Models
                         string fcbContentsAsString = fencedCodeBlock.Lines.ToString();
                         string[] newLineDelimiters = new string[] { "\r\n", "\n" };
                         List<string> fcbContents = fcbContentsAsString.Split(newLineDelimiters, StringSplitOptions.None).ToList();
-                        Models.FencedCodeBlock myFencedCodeBlock = new Models.FencedCodeBlock(fcbContents, fencedCodeBlock.Line + 1, fencedCodeBlock.Info ?? "", fencedCodeBlock.Arguments ?? "");
+                        Models.FencedCodeBlock myFencedCodeBlock = new Models.FencedCodeBlock(fcbContents, fencedCodeBlock.Line + 1, fencedCodeBlock.Column + 1, fencedCodeBlock.Info ?? "", fencedCodeBlock.Arguments ?? "");
                         Debug.WriteLine(myFencedCodeBlock.ToString(false, false));
                         codeBlocks.Add(myFencedCodeBlock);
                         //Debug.WriteLine($"Fenced code block with type '{fencedCodeBlock.Info}{arguments}' found on line {fencedCodeBlock.Line} at column {fencedCodeBlock.Column}:\n {fencedCodeBlock.Lines.ToString()}");
