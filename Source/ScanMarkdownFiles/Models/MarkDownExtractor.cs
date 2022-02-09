@@ -51,7 +51,8 @@ namespace ScanMarkdownFiles.Models
 
                 if (item is Markdig.Syntax.FencedCodeBlock fencedCodeBlock)
                 {
-                    if (delimiters.Contains(fencedCodeBlock.FencedChar.ToString()) && fencedCodeBlock.OpeningFencedCharCount == 3 && fencedCodeBlock.ClosingFencedCharCount == 3)
+                    //see specs https://github.github.com/gfm/#fenced-code-blocks
+                    if (delimiters.Contains(fencedCodeBlock.FencedChar.ToString()) && fencedCodeBlock.OpeningFencedCharCount >= 3 && fencedCodeBlock.ClosingFencedCharCount >= fencedCodeBlock.OpeningFencedCharCount)
                     {
                         string fcbContentsAsString = fencedCodeBlock.Lines.ToString();
                         string[] newLineDelimiters = new string[] { "\r\n", "\n" };

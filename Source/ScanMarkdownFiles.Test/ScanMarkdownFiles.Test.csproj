@@ -12,10 +12,14 @@
     <None Remove="TestFiles\OneSingleLineBlock1.md" />
     <None Remove="TestFiles\OneSingleLineBlock2.md" />
     <None Remove="TestFiles\Test.md" />
+    <None Remove="TestFiles\Test2.md" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="TestFiles\MultipleSingleLineBlocks1.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Test2.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Test.md">

@@ -97,7 +97,7 @@ if (arguments.ReplaceTypes.Any())
     Console.WriteLine("\nReplacing codeblock types:");
 
     int totalReplacements = 0;
-
+    int totalFilesChanged = 0;
     foreach (string searchReplaceType in arguments.ReplaceTypes)
     {
         string[] types = searchReplaceType.Split('=', StringSplitOptions.None);
@@ -132,6 +132,7 @@ if (arguments.ReplaceTypes.Any())
                 Console.WriteLine($"{fencedCodeBlocks.Count,4}x in {markDownFile.Filename}".IndentWithLevel(2));
 
                 totalReplacementsForType += fencedCodeBlocks.Count;
+                totalFilesChanged++;
             }
         }
 
@@ -140,6 +141,7 @@ if (arguments.ReplaceTypes.Any())
     }
 
     Console.WriteLine($"Overall total replacements: {totalReplacements}x".IndentWithLevel(1));
+    Console.WriteLine($"Total files changed: {totalFilesChanged}x".IndentWithLevel(1));
 }
 
 stopWatch.Stop();

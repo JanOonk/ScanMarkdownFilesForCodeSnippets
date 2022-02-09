@@ -154,7 +154,7 @@ namespace ScanMarkdownFiles.Test
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[2]).StartLineNr == 5);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[2]).EndLineNr == 5);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[2]).Contents == "This is a test");
-            
+
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[3]).NrOfLines == 1);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[3]).StartLineNr == 7);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[3]).EndLineNr == 7);
@@ -199,12 +199,12 @@ namespace ScanMarkdownFiles.Test
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[2]).StartLineNr == 5);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[2]).EndLineNr == 5);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[2]).Contents == "This is one`````` singleline block");
-            
+
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[3]).NrOfLines == 1);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[3]).StartLineNr == 7);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[3]).EndLineNr == 7);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[3]).Contents == "This is one `````` singleline block");
-            
+
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[4]).NrOfLines == 1);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[4]).StartLineNr == 9);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[4]).EndLineNr == 9);
@@ -214,7 +214,7 @@ namespace ScanMarkdownFiles.Test
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[5]).StartLineNr == 11);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[5]).EndLineNr == 11);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[5]).Contents == "This is one ``````singleline block");
-            
+
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[6]).NrOfLines == 1);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[6]).StartLineNr == 13);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[6]).EndLineNr == 13);
@@ -261,12 +261,12 @@ namespace ScanMarkdownFiles.Test
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[2]).StartLineNr == 3);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[2]).EndLineNr == 3);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[2]).Contents == "This is a test");
-            
+
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[3]).NrOfLines == 1);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[3]).StartLineNr == 3);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[3]).EndLineNr == 3);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[3]).Contents == "This is a test");
-            
+
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[4]).NrOfLines == 1);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[4]).StartLineNr == 5);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[4]).EndLineNr == 5);
@@ -276,7 +276,7 @@ namespace ScanMarkdownFiles.Test
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[5]).StartLineNr == 5);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[5]).EndLineNr == 5);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[5]).Contents == "This is a test");
-            
+
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[6]).NrOfLines == 1);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[6]).StartLineNr == 7);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[6]).EndLineNr == 7);
@@ -287,6 +287,39 @@ namespace ScanMarkdownFiles.Test
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[7]).EndLineNr == 7);
             Assert.IsTrue(((InlineCodeBlock)codeBlocks[7]).Contents == "This is a test");
 
+        }
+
+        [Test]
+        public static void TestMarkDig5()
+        {
+            string filename = @"TestFiles\Test2.md";
+            string contents = File.ReadAllText(filename);
+
+            List<Models.CodeBlock> codeBlocks = MarkDownExtractor.ExtractCodeBlocks(contents);
+            MarkDownFile markDownFile = new MarkDownFile(filename, codeBlocks);
+            Assert.IsTrue(markDownFile.CodeBlocks.Count == 3);
+            Assert.IsTrue(markDownFile.InlineCodeBlocksCount == 0);
+            Assert.IsTrue(markDownFile.FencedCodeBlocksCount == 3);
+            Assert.IsTrue(markDownFile.UniqueFencedCodeBlockTypes == 1);
+            CollectionAssert.AreEquivalent(markDownFile.CountPerFencedCodeBlockType, new Dictionary<string, int>()
+            {
+                { "", 3 }
+            });
+
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[0]).NrOfLines == 5);
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[0]).StartLineNr == 1);
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[0]).EndLineNr == 5);
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[0]).Contents == "```\r\nLook! You can see my backticks.\r\n```");
+
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[1]).NrOfLines == 3);
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[1]).StartLineNr == 7);
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[1]).EndLineNr == 9);
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[1]).Contents == "Should work");
+
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[2]).NrOfLines == 3);
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[2]).StartLineNr == 11);
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[2]).EndLineNr == 13);
+            Assert.IsTrue(((FencedCodeBlock)codeBlocks[2]).Contents == "Should work");
         }
 
     }
